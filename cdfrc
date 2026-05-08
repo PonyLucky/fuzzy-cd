@@ -1,0 +1,12 @@
+cdf() {
+  # Base directory
+  base="${1:-.}"
+  [ -d "$base" ] || exit 1
+  
+  # Directory selection TUI
+  sel=$(fd --type d --hidden --follow --exclude .git . "$base" 2>/dev/null | fzf --height 40% --reverse --exact) || return
+  
+  # Setting current directory to selection
+  [ -n "$sel" ] && builtin cd -- "$sel"
+}
+

@@ -1,0 +1,15 @@
+mkdir -p ~/.config
+cp ./cdfrc ~/.config/cdfrc
+
+line='source "$HOME/.config/cdfrc"'
+append_once() {
+  rc="$1"
+  [ -f "$rc" ] || return
+  if ! grep -qxF "$line" "$rc"; then
+    printf '%s\n' "$line" >> "$rc"
+  fi
+}
+append_once "$HOME/.bashrc"
+append_once "$HOME/.zshrc"
+
+echo "Done. Please restart your terminal."
