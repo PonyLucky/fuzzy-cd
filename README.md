@@ -4,6 +4,11 @@ Finally a command that just works to cd with a TUI!
 
 Works with both bash and sh.
 
+## Use
+
+1. `cdf` (runs in current directory)
+2. `cdf ~/Documents/` (runs in `~/Documents`, end slash is optionnal)
+
 ## Requirements
 
 First a Linux. Maybe MacOS too, I don't own any Apple device so I don't know.
