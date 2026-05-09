@@ -1,12 +1,41 @@
 cdf() {
-  # Base directory
-  base="${1:-.}"
-  [ -d "$base" ] || exit 1
-  
-  # Directory selection TUI
-  sel=$(fd --type d --hidden --follow --exclude .git . "$base" 2>/dev/null | fzf --height 40% --reverse --exact) || return
-  
-  # Setting current directory to selection
+  show_hidden=false
+  base=""
+
+  for arg in "$@"; do
+    case "$arg" in
+      --hidden) show_hidden=true ;;
+      --help)
+        cat <<'EOF'
+Usage: cdf [--hidden] [DIR]
+
+Change directory using fd+fzf directory picker.
+
+Options:
+  --hidden   Include hidden directories in the list
+  --help     Show this help message and exit
+
+If DIR is provided, search starts from DIR (default: current directory).
+EOF
+        return 0
+        ;;
+      --) shift; break ;;
+      -*) ;; # ignore other flags
+      *)
+        if [ -z "$base" ]; then
+          base="$arg"
+        fi
+        ;;
+    esac
+  done
+
+  base="${base:-.}"
+  [ -d "$base" ] || return 1
+
+  fd_args=(--type d --follow --exclude .git . "$base")
+  $show_hidden && fd_args=(--hidden "${fd_args[@]}")
+
+  sel=$(fd "${fd_args[@]}" 2>/dev/null | fzf --height 40% --reverse --exact) || return
   [ -n "$sel" ] && builtin cd -- "$sel"
 }
 
